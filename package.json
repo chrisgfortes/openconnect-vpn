@@ -7,7 +7,7 @@
     "node": ">=12"
   },
   "scripts": {
-    "install": "sh ./install.sh",
+    "postinstall": "sh ./install.sh",
     "connect": "babel-node index.js"
   },
   "author": "Christian Fortes",

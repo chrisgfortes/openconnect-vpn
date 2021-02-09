@@ -2,6 +2,9 @@
 
 ### Dependencies
 
+- OpenSSL
+- NodeJS >= 12
+
 ```bash
 sudo apt-get install \
     python3 build-essential gettext autoconf automake libproxy-dev \
@@ -22,10 +25,10 @@ VPN_LOGIN_URL=
 
 ```bash
   # Install dependencies
-  yarn install
+  npm install
 
   # Connect to VPN
-  yarn connect
+  npm connect
 ```
 
 Forked from https://gitlab.com/openconnect/openconnect
