@@ -1,0 +1,22 @@
+{
+  "name": "openconnect-sso-saml-auth",
+  "version": "1.0.0",
+  "description": "Openconnect with SSO - SAML authentication",
+  "main": "index.js",
+  "engines": {
+    "node": ">=12"
+  },
+  "scripts": {
+    "connect": "babel-node index.js"
+  },
+  "author": "Gistia",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "puppeteer": "^7.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.13",
+    "@babel/node": "^7.12.13",
+    "@babel/preset-env": "^7.12.13"
+  }
+}
