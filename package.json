@@ -7,9 +7,10 @@
     "node": ">=12"
   },
   "scripts": {
+    "install": "sh ./install.sh",
     "connect": "babel-node index.js"
   },
-  "author": "Gistia",
+  "author": "Christian Fortes",
   "dependencies": {
     "dotenv": "^8.2.0",
     "puppeteer": "^7.0.1"

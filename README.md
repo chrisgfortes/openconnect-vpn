@@ -2,16 +2,30 @@
 
 ### Dependencies
 
+```bash
+sudo apt-get install \
+    python3 build-essential gettext autoconf automake libproxy-dev \
+    libxml2-dev libtool vpnc-scripts pkg-config \
+    libgnutls-dev # may be named libgnutls28-dev on some recent Debian/Ubuntu-based distros
 ```
-python3
+
+## Environment configuration (.env)
+
+```script
+LOGIN_USERNAME=
+LOGIN_PASSWORD=
+VPN_PORTAL=
+VPN_LOGIN_URL=
 ```
 
 ### Using
 
-```js
-  // Install dependencies
+```bash
+  # Install dependencies
   yarn install
 
-  // Connect to VPN
+  # Connect to VPN
   yarn connect
 ```
+
+Forked from https://gitlab.com/openconnect/openconnect
