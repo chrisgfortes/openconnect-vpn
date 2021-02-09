@@ -2,7 +2,7 @@ import "dotenv/config";
 import os from "os";
 import { exec, execSync } from "child_process";
 import puppeteer from "puppeteer";
-import { objectToQuery } from "./lib/querystring";
+import { objectToQuery } from "./utils/querystring";
 
 const promisify = (...args) =>
   new Promise((resolve, reject) =>
