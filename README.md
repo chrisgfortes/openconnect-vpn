@@ -1,4 +1,4 @@
-## GlobalProtect VPN openconnect with SSO/SAML
+## GlobalProtect VPN / Openconnect with SSO/SAML
 
 ### Dependencies
 
