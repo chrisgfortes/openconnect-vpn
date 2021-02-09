@@ -1,5 +1,5 @@
 {
-  "name": "openconnect-sso-saml-auth",
+  "name": "openconnect-vpn",
   "version": "1.0.0",
   "description": "Openconnect with SSO - SAML authentication",
   "main": "index.js",
