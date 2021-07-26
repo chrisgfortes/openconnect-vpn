@@ -12,7 +12,10 @@ const promisify = (...args) =>
   );
 
 const connect = async () => {
+  const ARGV = process.argv;
   const ENV = process.env;
+  const startWithSlowMotion = ARGV.slice(-1)[0] === '--slow';
+
   console.log("[VPN] Initializing connection with VPN...");
 
   const list = [
@@ -42,7 +45,8 @@ const connect = async () => {
   console.log("[VPN] Authenticating...");
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: !startWithSlowMotion,
+    ...(startWithSlowMotion ? { slowMo: 250 } : {}),
   });
 
   const fields = {
@@ -112,7 +116,7 @@ const connect = async () => {
 
   const connectToVPN = exec(connectVpnUrl.join(" "));
 
-  connectToVPN.stdout.on("data", (message) => console.log(`[VPN] ${message}`));
+  connectToVPN.stdout.on("data", (message) => console.log(`[VPN] ${message.trim()}`));
 };
 
 connect();

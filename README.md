@@ -8,7 +8,7 @@
 ```bash
 sudo apt-get install \
     python3 build-essential gettext autoconf automake libproxy-dev \
-    libxml2-dev libtool vpnc-scripts pkg-config \
+    libxml2-dev libtool vpnc-scripts pkg-config zlib1g-dev \
     libgnutls-dev # may be named libgnutls28-dev on some recent Debian/Ubuntu-based distros
 ```
 
