@@ -12,23 +12,20 @@ sudo apt-get install \
     libgnutls-dev # may be named libgnutls28-dev on some recent Debian/Ubuntu-based distros
 ```
 
-## Environment configuration (.env)
-
-```script
-LOGIN_USERNAME=
-LOGIN_PASSWORD=
-VPN_PORTAL=
-VPN_LOGIN_URL=
-```
-
-### Using
-
+## Install nodejs dependencies
 ```bash
   # Install dependencies
-  npm install
+  yarn install
+```
 
-  # Connect to VPN
-  npm connect
+## Available commands
+
+```script
+yarn connect --help
+yarn connect --reset (Reset .env file)
+yarn connect --config (Show vpn config hidden password)
+yarn connect --config-secure (Show vpn config showing password)
+yarn connect --onclose="command" (run command when on close connection)
 ```
 
 Forked from https://gitlab.com/openconnect/openconnect

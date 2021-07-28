@@ -4,3 +4,10 @@ sbin/openconnect
 lib
 include
 share
+core/tests/.libs
+core/tests/.deps
+core/tests/configs/test-user-cert.config
+core/tests/configs/test-user-pass.config
+core/tests/lzstest
+core/tests/seqtest
+core/tests/serverhash

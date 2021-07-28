@@ -1,19 +1,25 @@
 {
   "name": "openconnect-vpn",
   "version": "1.0.0",
-  "description": "Openconnect with SSO - SAML authentication",
+  "description": "Openconnect with GlobalProtect using SSO/SAML authentication",
   "main": "index.js",
   "engines": {
     "node": ">=12"
   },
+  "bin": {
+    "gvpn": "./cli.js"
+  },
   "scripts": {
     "postinstall": "sh ./install.sh",
-    "connect": "babel-node index.js"
+    "connect": "babel-node ./cli.js connect"
   },
   "author": "Christian Fortes",
   "dependencies": {
+    "chalk": "^4.1.1",
     "dotenv": "^8.2.0",
-    "puppeteer": "^7.0.1"
+    "prompts": "^2.4.1",
+    "puppeteer": "^7.0.1",
+    "yargs": "^17.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.13",

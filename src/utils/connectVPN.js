@@ -1,26 +1,19 @@
-import "dotenv/config";
 import os from "os";
 import { exec, execSync } from "child_process";
 import puppeteer from "puppeteer";
-import { objectToQuery } from "./utils/querystring";
+import path from "path";
+import promisify from "./promisify";
+import { objectToQuery } from "./queryString";
+import onClose from "./onClose";
 
-const promisify = (...args) =>
-  new Promise((resolve, reject) =>
-    exec(...args, { cwd: __dirname }, (err, res) =>
-      err ? reject(err) : resolve(res)
-    )
-  );
+const rootDir = path.resolve('./');
 
-const connect = async () => {
-  const ARGV = process.argv;
-  const ENV = process.env;
-  const startWithSlowMotion = ARGV.slice(-1)[0] === '--slow';
-
+const connectVPN = async (argv, env) => {
   console.log("[VPN] Initializing connection with VPN...");
 
   const list = [
-    `openssl s_client -servername ${ENV.VPN_PORTAL}`,
-    `-connect ${ENV.VPN_PORTAL}:443`,
+    `openssl s_client -servername ${env.VPN_PORTAL}`,
+    `-connect ${env.VPN_PORTAL}:443`,
     "| openssl x509 -pubkey -noout",
     "| openssl rsa -pubin -outform der",
     "| openssl dgst -sha256 -binary",
@@ -32,21 +25,21 @@ const connect = async () => {
 
   const reqParams = [
     "./sbin/openconnect",
-    `--protocol=gp ${ENV.VPN_PORTAL}`,
+    `--protocol=gp ${env.VPN_PORTAL}`,
     `--servercert pin-sha256:${pinShaCert.toString().trim()}`,
   ];
 
   console.log("[VPN] Getting authentication url...");
 
-  const req_url = await promisify(reqParams.join(" ")).catch(
+  const req_url = await promisify(reqParams.join(" "), { cwd: rootDir }).catch(
     (error) => error.toString()?.match(/https:\/\/[^\s]+/g)?.[0]
   );
 
   console.log("[VPN] Authenticating...");
 
   const browser = await puppeteer.launch({
-    headless: !startWithSlowMotion,
-    ...(startWithSlowMotion ? { slowMo: 250 } : {}),
+    headless: !argv.slow,
+    ...(argv.slow ? { slowMo: 250 } : {}),
   });
 
   const fields = {
@@ -59,14 +52,14 @@ const connect = async () => {
   await page.goto(req_url, { waitUntil: "domcontentloaded" });
 
   await page.waitForSelector(fields.email);
-  await page.type(fields.email, ENV.LOGIN_USERNAME);
+  await page.type(fields.email, env.LOGIN_USERNAME);
 
   await page.waitForTimeout(200);
 
   await page.click(fields.submit);
 
   await page.waitForSelector(fields.password);
-  await page.type(fields.password, ENV.LOGIN_PASSWORD);
+  await page.type(fields.password, env.LOGIN_PASSWORD);
 
   await page.waitForTimeout(1500);
   await page.waitForSelector(fields.submit);
@@ -84,15 +77,15 @@ const connect = async () => {
 
   const pyScript = [
     "python3 ./sbin/globalprotect-login.py",
-    `-u ${ENV.LOGIN_USERNAME}`,
-    `${ENV.VPN_LOGIN_URL}`,
+    `-u ${env.LOGIN_USERNAME}`,
+    `https://${env.VPN_PORTAL}/ssl-vpn/login.esp`,
     `prelogin-cookie=${cookie}`,
     "--no-verify",
   ];
 
   console.log("[VPN] Getting auth cookie...");
 
-  const authArgs = await promisify(pyScript.join(" ")).then((text) =>
+  const authArgs = await promisify(pyScript.join(" "), { cwd: rootDir }).then((text) =>
     text.match(/(?<=<argument>)(.*?)(?=<\/argument>)/g).filter((item) => item)
   );
 
@@ -107,16 +100,23 @@ const connect = async () => {
 
   const connectVpnUrl = [
     "sudo ./sbin/openconnect --protocol=gp",
-    `--usergroup=gateway ${ENV.VPN_PORTAL}`,
+    `--usergroup=gateway ${env.VPN_PORTAL}`,
     `--cookie "${objectToQuery(params)}"`,
     `--servercert pin-sha256:${pinShaCert.toString().trim()}`,
   ];
 
-  console.log(`[VPN] Connecting with VPN (${ENV.VPN_PORTAL})...`);
+  console.log(`[VPN] Connecting with VPN (${env.VPN_PORTAL})...`);
 
   const connectToVPN = exec(connectVpnUrl.join(" "));
 
   connectToVPN.stdout.on("data", (message) => console.log(`[VPN] ${message.trim()}`));
+
+  if(argv.onclose) {
+    onClose(async () => {
+      await promisify(argv.onclose, { cwd: rootDir });
+      process.exit(1);
+    });
+  }
 };
 
-connect();
+export default connectVPN;
